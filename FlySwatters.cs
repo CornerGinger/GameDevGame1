@@ -26,6 +26,8 @@ namespace GameDevGame1
 {
 				new FlySprite(){ Position = new Vector2(100,100), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
 				new FlySprite(){ Position = new Vector2(400,400), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
+				new FlySprite(){ Position = new Vector2(100,400), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
+				new FlySprite(){ Position = new Vector2(300,100), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
 				new FlySprite(){ Position = new Vector2(200,200), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())}
 
 };

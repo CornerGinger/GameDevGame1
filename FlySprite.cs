@@ -19,6 +19,8 @@ namespace GameDevGame1
 		private double animationTimer;
 		private short animationFrame;
 		private Vector2 velocity;
+		private bool dead;
+		private int deadOrAlive = 0;
 
 		/// <summary>
 		/// The position of the fly
@@ -52,15 +54,24 @@ namespace GameDevGame1
 		/// <param name="gameTime">The game time</param>
 		public void Update(GameTime gameTime, GraphicsDeviceManager graphics)
 		{
-			Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-			if (Position.X < graphics.GraphicsDevice.Viewport.X || Position.X > graphics.GraphicsDevice.Viewport.Width - 64)
+			if (dead)
 			{
-				velocity.X *= -1;
+				Velocity = new Vector2(0, 0);
+				deadOrAlive = 1;
 			}
-			if (Position.Y < graphics.GraphicsDevice.Viewport.Y || Position.Y > graphics.GraphicsDevice.Viewport.Height - 64)
+			else
 			{
-				velocity.Y *= -1;
+				Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+				if (Position.X < graphics.GraphicsDevice.Viewport.X || Position.X > graphics.GraphicsDevice.Viewport.Width - 64)
+				{
+					velocity.X *= -1;
+				}
+				if (Position.Y < graphics.GraphicsDevice.Viewport.Y || Position.Y > graphics.GraphicsDevice.Viewport.Height - 64)
+				{
+					velocity.Y *= -1;
+				}
+				deadOrAlive = 0;
 			}
 		}
 
@@ -75,13 +86,17 @@ namespace GameDevGame1
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
 			// Update animation frame
+			if (dead)
+			{
+				animationFrame = 0;
+			}
 			if (animationTimer > 0.1)
 			{
 				animationFrame++;
 				if (animationFrame > 3) animationFrame = 0;
 				animationTimer -= 0.3;
 			}
-			var source = new Rectangle(64 * animationFrame, 0, 64, 64);
+			var source = new Rectangle(64 * animationFrame, 64 * deadOrAlive, 64, 64);
 			spriteBatch.Draw(texture, Position, source, Color.White);
 		}
 
