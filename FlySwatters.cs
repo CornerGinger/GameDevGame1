@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace GameDevGame1
@@ -13,7 +14,7 @@ namespace GameDevGame1
         private FlySprite[] flies;
         private Swatter swatter;
         private InputManager inputManager;
-        
+        private int fliesLeft;
         public FlySwatters()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -26,15 +27,18 @@ namespace GameDevGame1
 			// TODO: Add your initialization logic here
             Random random = new Random();
             flies = new FlySprite[] {
-
-                new FlySprite(){ Position = new Vector2(100,100), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
-                new FlySprite(){ Position = new Vector2(400,400), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
-                new FlySprite(){ Position = new Vector2(100,400), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
-                new FlySprite(){ Position = new Vector2(300,100), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())},
-                new FlySprite(){ Position = new Vector2(200,200), Velocity = new Vector2((float)random.NextDouble(), (float)random.NextDouble())}
-            };
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+				new FlySprite(new Vector2((float)random.NextDouble() * (GraphicsDevice.Viewport.Width - 64), (float)random.NextDouble() * (GraphicsDevice.Viewport.Height - 64))) { Velocity = new Vector2((float) random.NextDouble(),(float) random.NextDouble()) },
+			};
             swatter = new Swatter();
             inputManager = new InputManager();
+            fliesLeft = flies.Length;
 			base.Initialize();
         }
 
@@ -57,6 +61,16 @@ namespace GameDevGame1
 
 			foreach (var fly in flies) fly.Update(gameTime, graphics);
             swatter.Update(gameTime, inputManager);
+			swatter.Color = Color.White;
+			foreach (var fly in flies)
+			{
+				if (!fly.Dead && inputManager.Swat && fly.Bounds.CollidesWith(swatter.Bounds))
+				{
+					swatter.Color = Color.Red;
+					fly.Dead = true;
+					fliesLeft--;
+				}
+			}
 
 			base.Update(gameTime);
         }
@@ -67,8 +81,11 @@ namespace GameDevGame1
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-			foreach (var fly in flies) fly.Draw(gameTime, spriteBatch);
-            swatter.Draw(gameTime, spriteBatch);
+            foreach (var fly in flies)
+            {
+				fly.Draw(gameTime, spriteBatch);
+			}
+			swatter.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 			base.Draw(gameTime);
         }

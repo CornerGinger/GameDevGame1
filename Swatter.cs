@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameDevGame1.Collisions;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -14,11 +15,23 @@ namespace GameDevGame1
 		private Texture2D texture;
 		private double animationTimer;
 		private short animationFrame;
+		private BoundingRectangle bounds = new BoundingRectangle(new Vector2(200 - 32, 200 - 32), 64, 32);
+
 
 		/// <summary>
 		/// The position of the fly swatter
 		/// </summary>
 		public Vector2 Position;
+
+		/// <summary>
+		/// The color to blend with the swatter
+		/// </summary>
+		public Color Color { get; set; } = Color.White;
+
+		/// <summary>
+		/// The bounding volume of the sprite
+		/// </summary>
+		public BoundingRectangle Bounds => bounds;
 
 		/// <summary>
 		/// Loads the fly swatter texture
@@ -36,6 +49,8 @@ namespace GameDevGame1
 		public void Update(GameTime gameTime, InputManager manager)
 		{
 			Position = manager.Direction;
+			bounds.X = Position.X;
+			bounds.Y = Position.Y;
 		}
 
 		/// <summary>
@@ -45,6 +60,7 @@ namespace GameDevGame1
 		/// <param name="spriteBatch">The SpriteBatch to draw with</param>
 		public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
+			/* FOR LATER- MAKE SWATTER MOVE WHEN CLICKING
 			// Update animation timer
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -55,8 +71,9 @@ namespace GameDevGame1
 				if (animationFrame > 3) animationFrame = 0;
 				animationTimer -= 0.3;
 			}
+			*/
 			var source = new Rectangle(0, 0, 64, 64);
-			spriteBatch.Draw(texture, Position, source, Color.White, 0f, new Vector2(32,32), 1.5f, SpriteEffects.None, 0);
+			spriteBatch.Draw(texture, Position, source, Color, 0f, new Vector2(32,32), 1.5f, SpriteEffects.None, 0);
 		}
 	}
 }

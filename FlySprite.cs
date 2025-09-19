@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameDevGame1.Collisions;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -19,13 +20,15 @@ namespace GameDevGame1
 		private double animationTimer;
 		private short animationFrame;
 		private Vector2 velocity;
-		private bool dead;
 		private int deadOrAlive = 0;
+		private Vector2 Position;
+		private BoundingCircle bounds;
 
+		public bool Dead { get; set; } = false;
 		/// <summary>
-		/// The position of the fly
+		/// The bounding volume of the sprite
 		/// </summary>
-		public Vector2 Position;
+		public BoundingCircle Bounds => bounds;
 
 		/// <summary>
 		/// The velocity of the fly
@@ -37,6 +40,12 @@ namespace GameDevGame1
 			{
 				velocity = FixVelocity(value);
 			}
+		}
+
+		public FlySprite(Vector2 position)
+		{
+			this.Position = position;
+			this.bounds = new BoundingCircle(position - new Vector2(-32,-32), 32);
 		}
 
 		/// <summary>
@@ -54,7 +63,7 @@ namespace GameDevGame1
 		/// <param name="gameTime">The game time</param>
 		public void Update(GameTime gameTime, GraphicsDeviceManager graphics)
 		{
-			if (dead)
+			if (Dead)
 			{
 				return;
 				//Velocity = new Vector2(0, 0);
@@ -74,6 +83,7 @@ namespace GameDevGame1
 				}
 				deadOrAlive = 0;
 			}
+			bounds.Center = Position - new Vector2(-48, -48);
 		}
 
 		/// <summary>
@@ -87,9 +97,9 @@ namespace GameDevGame1
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
 			// Update animation frame
-			if (dead)
+			if (Dead)
 			{
-				animationFrame = 0;
+				return;
 			}
 			if (animationTimer > 0.1)
 			{
