@@ -56,8 +56,9 @@ namespace GameDevGame1
 		{
 			if (dead)
 			{
-				Velocity = new Vector2(0, 0);
-				deadOrAlive = 1;
+				return;
+				//Velocity = new Vector2(0, 0);
+				//deadOrAlive = 1;
 			}
 			else
 			{

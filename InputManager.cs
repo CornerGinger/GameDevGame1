@@ -60,6 +60,9 @@ namespace GameDevGame1
 			{
 				Direction += new Vector2(0, 100 * (float)gameTime.ElapsedGameTime.TotalSeconds);
 			}
+
+			//Get position from mouse
+			Direction = new Vector2(currentMouseState.X, currentMouseState.Y);
 			#endregion
 
 			#region Swat Input
